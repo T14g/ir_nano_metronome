@@ -40,6 +40,20 @@ void turnLedsOFF() {
     }
 }
 
+void turnLedsON() {
+    int ledState1 = digitalRead(LED_1);
+    int ledState2 = digitalRead(LED_2);
+    int ledState3 = digitalRead(LED_3);
+    int ledState4 = digitalRead(LED_4);
+
+    if(ledState1 == LOW || ledState2 == LOW || ledState3 == LOW || ledState4 == LOW) {
+      digitalWrite(LED_1, HIGH);    // First LED off
+      digitalWrite(LED_2, HIGH);  // Second LED on
+      digitalWrite(LED_3, HIGH);   // Third LED off
+      digitalWrite(LED_4, HIGH);   // Fourth LED off
+    }
+}
+
 void metronome() {
   // Calculate the beat interval
   if (tempo != previousTempo) {
@@ -113,11 +127,39 @@ void loop() {
     IR.resume();
     if(IR.decodedIRData.command == 0x10) {
       tempo = 100;
+      turnLedsOFF();
+      turnLedsON();
     }else if(IR.decodedIRData.command == 0x11) {
       tempo = 200;
+      turnLedsOFF();
+      turnLedsON();
     }else if(IR.decodedIRData.command == 0x12) {
       tempo = 0;
       turnLedsOFF();
+    }else if(IR.decodedIRData.command == 0x13) {
+      if(tempo == 0) {
+        tempo = 70;
+      }else {
+        tempo += 10;
+      }
+      turnLedsOFF();
+      turnLedsON();
+    }else if(IR.decodedIRData.command == 0x15) {
+      if(tempo == 0) {
+        tempo = 70;
+      }else {
+        tempo += 5;
+      }
+      turnLedsOFF();
+      turnLedsON();
+    }else if(IR.decodedIRData.command == 0x17) {
+      if(tempo == 0) {
+        tempo = 70;
+      }else {
+        tempo -= 5;
+      }
+      turnLedsOFF();
+      turnLedsON();
     }
     delay(1000);
   }
